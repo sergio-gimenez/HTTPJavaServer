@@ -17,7 +17,6 @@ public class MainServer {
     private static final int PORT_NUMBER = 5000;
     private static ServerSocket serverSocket;
     private static ClientHandler clientHandler;
-    private static Thread thread;
 
     public static void main(String[] args) throws IOException {
         serverSocket = new ServerSocket(PORT_NUMBER);
@@ -28,7 +27,7 @@ public class MainServer {
         }
     }
 
-    protected void finallize() throws IOException {
+    protected void finalize() throws IOException {
         serverSocket.close();
     }
 }
