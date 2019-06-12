@@ -27,7 +27,11 @@ public class MainServer {
         }
     }
 
-    protected void finalize() throws IOException {
-        serverSocket.close();
+    protected void finalize() throws IOException, Throwable {
+        try {
+            serverSocket.close();
+        } finally {
+            super.finalize();
+        }
     }
 }

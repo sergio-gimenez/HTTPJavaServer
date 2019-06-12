@@ -31,8 +31,7 @@ public class ClientHandler implements Runnable {
         InputStream inputToServer = null;
         OutputStream outputFromServer = null;
 
-        try {
-            // create input buffer and output buffer
+        try {            
             inputToServer = clientSocket.getInputStream();
             outputFromServer = clientSocket.getOutputStream();
             PrintWriter serverPrintOut = new PrintWriter(new OutputStreamWriter(outputFromServer, "UTF-8"), true);
