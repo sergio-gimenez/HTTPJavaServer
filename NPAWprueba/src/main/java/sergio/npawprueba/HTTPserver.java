@@ -17,6 +17,8 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 import static javax.management.remote.JMXConnectorFactory.connect;
 
@@ -30,6 +32,7 @@ public class HTTPserver implements Runnable {
     static final String DEFAULT_FILE = "index.html";
     static final String FILE_NOT_FOUND = "404.html";
     static final String METHOD_NOT_SUPPORTED = "not_supported.html";
+
     // port to listen connection
     static final int PORT = 8080;
 
@@ -69,6 +72,7 @@ public class HTTPserver implements Runnable {
 
     @Override
     public void run() {
+
         // we manage our particular client connection
         BufferedReader in = null;
         PrintWriter out = null;
@@ -76,6 +80,9 @@ public class HTTPserver implements Runnable {
         String fileRequested = null;
 
         try {
+            
+            //this.getQueryMap("http://dataService.com/getData?accountCode=clienteA&targetDevice=XBox&pluginVersion=3.3.1");
+            
             // we read characters from the client via input stream on the socket
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             // we get character output stream to client (for headers)
@@ -88,7 +95,7 @@ public class HTTPserver implements Runnable {
             // we parse the request with a string tokenizer
             StringTokenizer parse = new StringTokenizer(input);
             String method = parse.nextToken().toUpperCase(); // we get the HTTP method of the client
-            
+
             // we get file requested
             fileRequested = parse.nextToken().toLowerCase();
 
@@ -132,13 +139,13 @@ public class HTTPserver implements Runnable {
 
                     // send HTTP Headers
                     out.println("HTTP/1.1 200 OK");
-                    out.println("Server: Java HTTP Server from SSaurel : 1.0");
+                    out.println("Server: Java HTTP Server from Sergio : 1.0");
                     out.println("Date: " + new Date());
                     out.println("Content-type: " + content);
                     out.println("Content-length: " + fileLength);
                     out.println(); // blank line between headers and content, very important !
                     out.flush(); // flush character output stream buffer
-                    
+
                     dataOut.write(fileData, 0, fileLength);
                     dataOut.flush();
                 }
@@ -220,6 +227,18 @@ public class HTTPserver implements Runnable {
         if (verbose) {
             System.out.println("File " + fileRequested + " not found");
         }
+    }
+
+
+    public Map<String, String> getParamsFromQuery(String query) {        
+        String[] params = query.split("\\?")[1].split("&");
+        Map<String, String> map = new HashMap<String, String>();
+        for (String param : params) {
+            String name = param.split("=")[0];
+            String value = param.split("=")[1];
+            map.put(name, value);
+        }
+          return map;      
     }
 
 }
