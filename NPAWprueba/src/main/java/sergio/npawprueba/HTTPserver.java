@@ -28,8 +28,11 @@ import static javax.management.remote.JMXConnectorFactory.connect;
  */
 public class HTTPserver implements Runnable {
 
-    static final File WEB_ROOT = new File("/home/sergio/NetBeansProjects/NPAWprueba/NPAWprueba/src/html");
-    static final String DEFAULT_FILE = "index.html";
+    static final File WEB_ROOT = new File("/home/sergio/NetBeansProjects/NPAWprueba/NPAWprueba/src/xml");
+    //static final File WEB_ROOT = new File("/home/sergio/NetBeansProjects/NPAWprueba/NPAWprueba/src/html");
+    static final String DEFAULT_FILE = "response.xml";
+    //static final String DEFAULT_FILE = "index.html";
+    
     static final String FILE_NOT_FOUND = "404.html";
     static final String METHOD_NOT_SUPPORTED = "not_supported.html";
 
@@ -41,6 +44,8 @@ public class HTTPserver implements Runnable {
 
     // Client Connection via Socket Class
     private Socket clientSocket;
+    
+    private CreateXMLFileJava xmlWritter;
 
     public HTTPserver(Socket clientSocket) {
         this.clientSocket = clientSocket;
@@ -78,6 +83,7 @@ public class HTTPserver implements Runnable {
         PrintWriter out = null;
         BufferedOutputStream dataOut = null;
         String fileRequested = null;
+        String queryType = null;
 
         try {
             
@@ -98,6 +104,8 @@ public class HTTPserver implements Runnable {
 
             // we get file requested
             fileRequested = parse.nextToken().toLowerCase();
+            
+            queryType = fileRequested.split("\\?")[0];
 
             // we support only GET and HEAD methods, we check
             if (!method.equals("GET") && !method.equals("HEAD")) {
@@ -125,17 +133,29 @@ public class HTTPserver implements Runnable {
                 dataOut.flush();
 
             } else {
-                // GET or HEAD method
-                if (fileRequested.endsWith("/")) {
-                    fileRequested += DEFAULT_FILE;
+                
+                if(queryType.equalsIgnoreCase("/getData")){                                        
+                    Map map = getParamsFromQuery(input);
+                    //TODO read data from db
+                    
+                    //TODO cluster logic
+                    CreateXMLFileJava.generateXMLResponse("clusterA.com", "10");                    
                 }
+                
+                
+                // GET or HEAD method
+               // if (fileRequested.endsWith("/")) {
+                    //fileRequested += DEFAULT_FILE;
+                //}
 
+                fileRequested = DEFAULT_FILE;
+                
                 File file = new File(WEB_ROOT, fileRequested);
                 int fileLength = (int) file.length();
                 String content = getContentType(fileRequested);
 
-                if (method.equals("GET")) { // GET method so we return content
-                    byte[] fileData = readFileData(file, fileLength);
+                if (method.equals("GET") && queryType.equalsIgnoreCase("/getData")) { // GET method so we return content
+                    byte[] fileData = readFileData(file, fileLength);                                       
 
                     // send HTTP Headers
                     out.println("HTTP/1.1 200 OK");
@@ -153,7 +173,6 @@ public class HTTPserver implements Runnable {
                 if (verbose) {
                     System.out.println("File " + fileRequested + " of type " + content + " returned");
                 }
-
             }
 
         } catch (FileNotFoundException fnfe) {
