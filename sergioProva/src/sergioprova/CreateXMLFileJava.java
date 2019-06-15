@@ -6,6 +6,7 @@
 package sergioprova;
 
 import java.io.File;
+import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
@@ -27,9 +28,10 @@ import org.w3c.dom.Element;
  */
 public class CreateXMLFileJava {
 
-    public static final String xmlFilePath = "/home/sergio/NetBeansProjects/NPAWprueba/NPAWprueba/src/xml/response.xml";
+    public static final String xmlFilePath = HTTPserver.responsePath + HTTPserver.DEFAULT_FILE;            
 
-    public static void generateXMLResponse(String host, String ping) {
+    public static void generateXMLResponse(String host, String ping) {                       
+        
         try {
             DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
 
@@ -72,12 +74,15 @@ public class CreateXMLFileJava {
             // You can use that for debugging
             transformer.transform(domSource, streamResult);
 
-            System.out.println("Done creating XML File");
+            if (HTTPserver.verbose) {
+                System.out.println("Done creating XML File");
+            }
 
         } catch (TransformerException ex) {
             Logger.getLogger(CreateXMLFileJava.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(CreateXMLFileJava.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }    
+    }
+
 }

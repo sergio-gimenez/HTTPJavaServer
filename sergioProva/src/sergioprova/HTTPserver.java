@@ -16,9 +16,11 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.Paths;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 import static javax.management.remote.JMXConnectorFactory.connect;
 
@@ -28,17 +30,19 @@ import static javax.management.remote.JMXConnectorFactory.connect;
  */
 public class HTTPserver implements Runnable {
 
-    static final File WEB_ROOT = new File("/home/sergio/NetBeansProjects/NPAWprueba/NPAWprueba/src/xml");
-    static final String DEFAULT_FILE = "response.xml";
+    static final File WEB_ROOT = new File("/src/xml");
+    static final String DEFAULT_FILE = "/response.xml";
 
     static final String FILE_NOT_FOUND = "404.html";
     static final String METHOD_NOT_SUPPORTED = "not_supported.html";
+
+    public static String responsePath;
 
     // port to listen connection
     static final int PORT = 8080;
 
     // verbose mode
-    static final boolean verbose = true;
+    static final boolean verbose = false;
 
     // Client Connection via Socket Class
     private Socket clientSocket;
@@ -54,6 +58,14 @@ public class HTTPserver implements Runnable {
 
         try {
             ServerSocket serverConnect = new ServerSocket(PORT);
+            
+            if (verbose)
+                System.out.println("Absolute project path: " + Paths.get("").toAbsolutePath().toString());
+            
+            responsePath = Paths.get("").toAbsolutePath().toString() + WEB_ROOT;    
+            
+            System.out.println(responsePath);
+
             System.out.println("Server started.\nListening for connections on port : " + PORT + " ...\n");
 
             // we listen until user halts server execution
@@ -113,7 +125,7 @@ public class HTTPserver implements Runnable {
                 }
 
                 // we return the not supported file to the client
-                File file = new File(WEB_ROOT, METHOD_NOT_SUPPORTED);
+                File file = new File(responsePath, METHOD_NOT_SUPPORTED);
                 int fileLength = (int) file.length();
                 String contentMimeType = "text/html";
                 //read content to return to client
@@ -142,18 +154,18 @@ public class HTTPserver implements Runnable {
                     String responseFromDB
                             = databaseReader.getResponseFromDB(map.get("accountCode").toString(),
                                     map.get("targetDevice").toString(),
-                                    map.get("pluginVersion").toString());                   
-                    
+                                    map.get("pluginVersion").toString());
+
                     //Generación del xml a partir de los datos extraídos de la DB
                     String pingTime = responseFromDB.split(",")[0];
-                    String host = balanceTraffic(Integer.parseInt(responseFromDB.split(",")[1]),Integer.parseInt(responseFromDB.split(",")[2]));        
-                                        
+                    String host = balanceTraffic(Integer.parseInt(responseFromDB.split(",")[1]), Integer.parseInt(responseFromDB.split(",")[2]));
+
                     CreateXMLFileJava.generateXMLResponse(host, pingTime);
                 }
-                
+
                 fileRequested = DEFAULT_FILE;
 
-                File file = new File(WEB_ROOT, fileRequested);
+                File file = new File(responsePath, fileRequested);
                 int fileLength = (int) file.length();
                 String content = getContentType(fileRequested);
 
@@ -230,7 +242,7 @@ public class HTTPserver implements Runnable {
     }
 
     private void fileNotFound(PrintWriter out, OutputStream dataOut, String fileRequested) throws IOException {
-        File file = new File(WEB_ROOT, FILE_NOT_FOUND);
+        File file = new File(responsePath, FILE_NOT_FOUND);
         int fileLength = (int) file.length();
         String content = "text/html";
         byte[] fileData = readFileData(file, fileLength);
@@ -268,5 +280,11 @@ public class HTTPserver implements Runnable {
         } else {
             return "clusterA.com";
         }
+    }
+
+    private static String getRootPath() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Enter server path: ");
+        return scan.nextLine();
     }
 }
