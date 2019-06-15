@@ -16,7 +16,7 @@ import java.sql.Statement;
  *
  * @author sqlitetutorial.net
  */
-public class SelectApp {
+public class DBHandler {
 
     /**
      * Connect to the test.db database
@@ -72,7 +72,7 @@ public class SelectApp {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        SelectApp app = new SelectApp();
+        DBHandler app = new DBHandler();
         app.getResponseFromDB("clienteA", "XBox", "3.3.1");
     }
 }

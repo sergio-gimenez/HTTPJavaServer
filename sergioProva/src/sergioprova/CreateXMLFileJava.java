@@ -6,7 +6,6 @@
 package sergioprova;
 
 import java.io.File;
-import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;

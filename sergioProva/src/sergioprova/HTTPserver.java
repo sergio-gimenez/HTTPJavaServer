@@ -42,13 +42,13 @@ public class HTTPserver implements Runnable {
     static final int PORT = 8080;
 
     // verbose mode
-    static final boolean verbose = false;
+    static final boolean verbose = true;
 
     // Client Connection via Socket Class
     private Socket clientSocket;
 
     //Database reader
-    private SelectApp databaseReader = new SelectApp();
+    private DBHandler databaseReader = new DBHandler();
 
     public HTTPserver(Socket clientSocket) {
         this.clientSocket = clientSocket;
@@ -58,12 +58,13 @@ public class HTTPserver implements Runnable {
 
         try {
             ServerSocket serverConnect = new ServerSocket(PORT);
-            
-            if (verbose)
+
+            if (verbose) {
                 System.out.println("Absolute project path: " + Paths.get("").toAbsolutePath().toString());
-            
-            responsePath = Paths.get("").toAbsolutePath().toString() + WEB_ROOT;    
-            
+            }
+
+            responsePath = Paths.get("").toAbsolutePath().toString() + WEB_ROOT;
+
             System.out.println(responsePath);
 
             System.out.println("Server started.\nListening for connections on port : " + PORT + " ...\n");
@@ -263,6 +264,12 @@ public class HTTPserver implements Runnable {
         }
     }
 
+    /* En este método se devuelve un map con    
+     CLAVE: Nombre del campo VALOR: valor del campo
+    
+    Ejemplo -> CLAVE:accountCode VALOR:clienteA
+     */
+    
     public Map<String, String> getParamsFromQuery(String query) {
         String[] params = query.split(" ")[1].split("\\?")[1].split("&");
         Map<String, String> map = new HashMap<String, String>();
@@ -274,17 +281,13 @@ public class HTTPserver implements Runnable {
         return map;
     }
 
+    
+    //Método que balancea el tráfico
     public String balanceTraffic(int trafficHostA, int trafficHostB) {
         if ((Math.random() * 100) >= trafficHostA) {
             return "clusterB.com";
         } else {
             return "clusterA.com";
         }
-    }
-
-    private static String getRootPath() {
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Enter server path: ");
-        return scan.nextLine();
     }
 }
