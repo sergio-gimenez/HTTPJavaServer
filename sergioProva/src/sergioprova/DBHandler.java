@@ -66,15 +66,6 @@ public class DBHandler {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-
         return null;
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        DBHandler app = new DBHandler();
-        app.getResponseFromDB("clienteA", "XBox", "3.3.1");
     }
 }

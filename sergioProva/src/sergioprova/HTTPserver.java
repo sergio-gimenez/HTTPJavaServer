@@ -104,12 +104,7 @@ public class HTTPserver implements Runnable {
             dataOut = new BufferedOutputStream(clientSocket.getOutputStream());
 
             // get first line of the request from the client            
-            String input = in.readLine();
-            // we parse the request with a string tokenizer
-            // StringTokenizer parse = new StringTokenizer(input);                        
-            //String method = parse.nextToken().toUpperCase(); // we get the HTTP method of the client
-            //String method = "GET";
-
+            String input = in.readLine();                                    
             System.out.println(input);
             String method = input.split(" ")[0];
 
