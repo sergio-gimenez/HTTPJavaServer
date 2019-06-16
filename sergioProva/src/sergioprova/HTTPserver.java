@@ -105,7 +105,10 @@ public class HTTPserver implements Runnable {
 
             // get first line of the request from the client            
             String input = in.readLine();                                    
-            System.out.println(input);
+            
+            if(verbose)             
+                System.out.println(input);            
+            
             String method = input.split(" ")[0];
 
             // we get file requested            
