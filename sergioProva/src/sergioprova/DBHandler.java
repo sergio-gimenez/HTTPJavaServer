@@ -5,6 +5,7 @@
  */
 package sergioprova;
 
+import java.nio.file.Paths;
 import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,7 +26,9 @@ public class DBHandler {
      */
     private Connection connect() {
         // SQLite connection string
-        String url = "jdbc:sqlite:/home/sergio/Escritorio/sergioProva/src/sql/db.db";
+        
+        
+        String url = "jdbc:sqlite:" + Paths.get("").toAbsolutePath().toString() + "/src/sql/db.db";
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(url);

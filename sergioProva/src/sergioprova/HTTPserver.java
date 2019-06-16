@@ -20,9 +20,7 @@ import java.nio.file.Paths;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.StringTokenizer;
-import static javax.management.remote.JMXConnectorFactory.connect;
 
 /**
  *
@@ -42,7 +40,7 @@ public class HTTPserver implements Runnable {
     static final int PORT = 8080;
 
     // verbose mode
-    static final boolean verbose = true;
+    static final boolean verbose = false;
 
     // Client Connection via Socket Class
     private Socket clientSocket;
@@ -107,10 +105,12 @@ public class HTTPserver implements Runnable {
             // get binary output stream to client (for requested data)
             dataOut = new BufferedOutputStream(clientSocket.getOutputStream());
 
-            // get first line of the request from the client
-            String input = in.readLine();
+            
+            
+            // get first line of the request from the client            
+            String input = in.readLine();                        
             // we parse the request with a string tokenizer
-            StringTokenizer parse = new StringTokenizer(input);
+            StringTokenizer parse = new StringTokenizer(input);                        
             String method = parse.nextToken().toUpperCase(); // we get the HTTP method of the client
 
             // we get file requested
@@ -151,17 +151,22 @@ public class HTTPserver implements Runnable {
                     //Get params and store them in a map.
                     Map map = getParamsFromQuery(input);
 
-                    //read data from db                    
-                    String responseFromDB
-                            = databaseReader.getResponseFromDB(map.get("accountCode").toString(),
-                                    map.get("targetDevice").toString(),
-                                    map.get("pluginVersion").toString());
+                    if (map.size() < 3) {
+                        System.out.println("No se han pedido todos los parámetros necesarios para la petición: " + input);
 
-                    //Generación del xml a partir de los datos extraídos de la DB
-                    String pingTime = responseFromDB.split(",")[0];
-                    String host = balanceTraffic(Integer.parseInt(responseFromDB.split(",")[1]), Integer.parseInt(responseFromDB.split(",")[2]));
+                    } else {
+                        //read data from db                    
+                        String responseFromDB
+                                = databaseReader.getResponseFromDB(map.get("accountCode").toString(),
+                                        map.get("targetDevice").toString(),
+                                        map.get("pluginVersion").toString());
 
-                    CreateXMLFileJava.generateXMLResponse(host, pingTime);
+                        //Generación del xml a partir de los datos extraídos de la DB
+                        String pingTime = responseFromDB.split(",")[0];
+                        String host = balanceTraffic(Integer.parseInt(responseFromDB.split(",")[1]), Integer.parseInt(responseFromDB.split(",")[2]));
+
+                        CreateXMLFileJava.generateXMLResponse(host, pingTime);                        
+                    }
                 }
 
                 fileRequested = DEFAULT_FILE;
@@ -269,7 +274,6 @@ public class HTTPserver implements Runnable {
     
     Ejemplo -> CLAVE:accountCode VALOR:clienteA
      */
-    
     public Map<String, String> getParamsFromQuery(String query) {
         String[] params = query.split(" ")[1].split("\\?")[1].split("&");
         Map<String, String> map = new HashMap<String, String>();
@@ -281,7 +285,6 @@ public class HTTPserver implements Runnable {
         return map;
     }
 
-    
     //Método que balancea el tráfico
     public String balanceTraffic(int trafficHostA, int trafficHostB) {
         if ((Math.random() * 100) >= trafficHostA) {
