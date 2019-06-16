@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.UUID;
 
 /**
  *
@@ -105,16 +106,19 @@ public class HTTPserver implements Runnable {
             // get binary output stream to client (for requested data)
             dataOut = new BufferedOutputStream(clientSocket.getOutputStream());
 
-            
-            
             // get first line of the request from the client            
-            String input = in.readLine();                        
+            String input = in.readLine();
             // we parse the request with a string tokenizer
-            StringTokenizer parse = new StringTokenizer(input);                        
-            String method = parse.nextToken().toUpperCase(); // we get the HTTP method of the client
+            // StringTokenizer parse = new StringTokenizer(input);                        
+            //String method = parse.nextToken().toUpperCase(); // we get the HTTP method of the client
+            //String method = "GET";
 
-            // we get file requested
-            fileRequested = parse.nextToken().toLowerCase();
+            System.out.println(input);
+            String method = input.split(" ")[0];
+
+            // we get file requested            
+            //fileRequested = parse.nextToken().toLowerCase();
+            fileRequested = input.split(" ")[1];
 
             // we get the query type
             queryType = fileRequested.split("\\?")[0];
@@ -165,7 +169,7 @@ public class HTTPserver implements Runnable {
                         String pingTime = responseFromDB.split(",")[0];
                         String host = balanceTraffic(Integer.parseInt(responseFromDB.split(",")[1]), Integer.parseInt(responseFromDB.split(",")[2]));
 
-                        CreateXMLFileJava.generateXMLResponse(host, pingTime);                        
+                        CreateXMLFileJava.generateXMLResponse(host, pingTime);
                     }
                 }
 
@@ -292,5 +296,15 @@ public class HTTPserver implements Runnable {
         } else {
             return "clusterA.com";
         }
+    }
+
+    public static String generateUniqueCode() {
+
+        UUID id = UUID.randomUUID();
+        return id.toString();
+    }
+
+    private static void log(Object aObject) {
+        System.out.println(String.valueOf(aObject));
     }
 }

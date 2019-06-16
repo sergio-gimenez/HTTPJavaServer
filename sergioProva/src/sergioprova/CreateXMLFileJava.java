@@ -52,7 +52,7 @@ public class CreateXMLFileJava {
             root.setAttributeNode(pingTime);
 
             Attr viewCode = document.createAttribute("c");
-            viewCode.setValue("7xnj85f06yqswc5x");
+            viewCode.setValue(HTTPserver.generateUniqueCode());
             root.setAttributeNode(viewCode);
 
             // create the xml file
