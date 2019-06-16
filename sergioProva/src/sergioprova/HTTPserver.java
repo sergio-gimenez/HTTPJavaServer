@@ -20,7 +20,6 @@ import java.nio.file.Paths;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.StringTokenizer;
 import java.util.UUID;
 
 /**
@@ -63,9 +62,7 @@ public class HTTPserver implements Runnable {
             }
 
             responsePath = Paths.get("").toAbsolutePath().toString() + WEB_ROOT;
-
-            System.out.println(responsePath);
-
+            
             System.out.println("Server started.\nListening for connections on port : " + PORT + " ...\n");
 
             // we listen until user halts server execution
@@ -169,7 +166,7 @@ public class HTTPserver implements Runnable {
                         String pingTime = responseFromDB.split(",")[0];
                         String host = balanceTraffic(Integer.parseInt(responseFromDB.split(",")[1]), Integer.parseInt(responseFromDB.split(",")[2]));
 
-                        CreateXMLFileJava.generateXMLResponse(host, pingTime);
+                        CreateXMLFile.generateXMLResponse(host, pingTime);
                     }
                 }
 
@@ -297,14 +294,11 @@ public class HTTPserver implements Runnable {
             return "clusterA.com";
         }
     }
-
+    
+    // Método que genera el código unico uuid.
     public static String generateUniqueCode() {
 
         UUID id = UUID.randomUUID();
         return id.toString();
-    }
-
-    private static void log(Object aObject) {
-        System.out.println(String.valueOf(aObject));
     }
 }

@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
  *
  * @author sergio
  */
-public class CreateXMLFileJava {
+public class CreateXMLFile {
 
     public static final String xmlFilePath = HTTPserver.responsePath + HTTPserver.DEFAULT_FILE;            
 
@@ -62,7 +62,7 @@ public class CreateXMLFileJava {
             try {
                 transformer = transformerFactory.newTransformer();
             } catch (TransformerConfigurationException ex) {
-                Logger.getLogger(CreateXMLFileJava.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CreateXMLFile.class.getName()).log(Level.SEVERE, null, ex);
             }
             DOMSource domSource = new DOMSource(document);
             StreamResult streamResult = new StreamResult(new File(xmlFilePath));
@@ -78,9 +78,9 @@ public class CreateXMLFileJava {
             }
 
         } catch (TransformerException ex) {
-            Logger.getLogger(CreateXMLFileJava.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CreateXMLFile.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParserConfigurationException ex) {
-            Logger.getLogger(CreateXMLFileJava.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CreateXMLFile.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
