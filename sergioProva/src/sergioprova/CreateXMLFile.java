@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
  */
 public class CreateXMLFile {
 
-    public static final String xmlFilePath = HTTPserver.responsePath + HTTPserver.DEFAULT_FILE;            
+    public static final String xmlFilePath = HTTPserver.responsePath + HTTPserver.DEFAULT_FILE;               
 
     public static void generateXMLResponse(String host, String ping) {                       
         

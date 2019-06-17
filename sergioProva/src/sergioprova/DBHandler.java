@@ -25,9 +25,9 @@ public class DBHandler {
      */
     private Connection connect() {
         // SQLite connection string
-        
-        
-        String url = "jdbc:sqlite:" + Paths.get("").toAbsolutePath().toString() + "/src/sql/db.db";
+
+ 
+        String url = "jdbc:sqlite:" + Paths.get("").toAbsolutePath().toString() + "/sql/db.db";        
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(url);

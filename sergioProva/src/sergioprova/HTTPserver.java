@@ -28,7 +28,7 @@ import java.util.UUID;
  */
 public class HTTPserver implements Runnable {
 
-    static final File WEB_ROOT = new File("/src/xml");
+    static final File WEB_ROOT = new File("/xml");
     static final String DEFAULT_FILE = "/response.xml";
 
     static final String FILE_NOT_FOUND = "404.html";
@@ -61,7 +61,7 @@ public class HTTPserver implements Runnable {
                 System.out.println("Absolute project path: " + Paths.get("").toAbsolutePath().toString());
             }
 
-            responsePath = Paths.get("").toAbsolutePath().toString() + WEB_ROOT;
+            responsePath = Paths.get("").toAbsolutePath().toString() + WEB_ROOT;                        
             
             System.out.println("Server started.\nListening for connections on port : " + PORT + " ...\n");
 
@@ -95,7 +95,7 @@ public class HTTPserver implements Runnable {
         String queryType = null;
 
         try {
-
+            
             // we read characters from the client via input stream on the socket
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             // we get character output stream to client (for headers)
@@ -108,6 +108,12 @@ public class HTTPserver implements Runnable {
             
             if(verbose)             
                 System.out.println(input);            
+            
+            try {
+                this.getHTTPMethod(input);
+            } catch (Exception NullAddress) {
+                System.err.println("URL can't be an empty value");
+            }
             
             String method = input.split(" ")[0];
 
@@ -298,5 +304,9 @@ public class HTTPserver implements Runnable {
 
         UUID id = UUID.randomUUID();
         return id.toString();
+    }
+    
+    public String getHTTPMethod(String input) throws Exception {
+        return input.split(" ")[0];
     }
 }
