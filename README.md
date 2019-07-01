@@ -2,7 +2,7 @@
 
 ## Server
 
-* El servidor HTTP está basado en la librería [HttpServer](https://docs.oracle.com/javase/8/docs/jre/api/net/httpserver/spec/com/sun/net/httpserver/HttpServer.html).
+* El servidor HTTP está basado en las librerias [ServerSocket](https://docs.oracle.com/javase/7/docs/api/java/net/ServerSocket.html) y [Socket](https://docs.oracle.com/javase/7/docs/api/java/net/Socket.html). Estas dos librerías básicamente lo que hacen es escuchar un puerto determinado (en este caso el **8080**) y lanzar un thread para cada petición.
 
 * El servidor escucha por el **puerto 8080**.
 
